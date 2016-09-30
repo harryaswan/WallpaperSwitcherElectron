@@ -4,6 +4,7 @@ const WallMan = require("HASWallpaperManager");
 
 var wallManApp = new WallMan.app(global.config);
 
+console.log("global.config.image_folder",global.config.image_folder);
 
 WallMan.os.checkFolders(global.config.image_folder);
 

@@ -21,25 +21,42 @@ search_form.addEventListener('submit', function (event) {
 });
 
 var createImageElement = function (link) {
-
-    let url = link.preview.images[0].resolutions[2].url;
+    console.log('link', link);
+    let url;
+    if (link.preview.images[0].resolutions.length > 2) {
+        url = link.preview.images[0].resolutions[2].url;
+    } else {
+        url = link.preview.images[0].resolutions[0].url;
+    }
     let cleanURL = WallMan.helper.cleanURL(url);
 
     let div = document.createElement('div');
     let img = document.createElement('img');
     let p = document.createElement('p');
-    let button = document.createElement('button');
+    let setButton = document.createElement('button');
+    let saveButton = document.createElement('button');
     p.innerText = link.title;
     img.setAttribute('src', cleanURL);
-    button.innerText = "Set As Wallpaper"
-    button.addEventListener('click', function (e) {
+    setButton.innerText = "Set As Wallpaper"
+    setButton.addEventListener('click', function (e) {
         console.log('setting wallpaper', link.url);
         ipcRenderer.send('set-as-wallpaper', link.url);
+    });
+    saveButton.innerText = "Add to Favorites"
+    saveButton.addEventListener('click', function (e) {
+        console.log('add to fav', link.url);
+        ipcRenderer.send('add-to-favs', link.url);
+        let favElm = document.createElement('div');
+        favElm.appendChild(img);
+        favElm.appendChild(p);
+        favElm.appendChild(setButton);
+        document.getElementById('favs_box').appendChild(favElm);
     });
 
     div.appendChild(img);
     div.appendChild(p);
-    div.appendChild(button);
+    div.appendChild(setButton);
+    div.appendChild(saveButton);
     return div;
 }
 
